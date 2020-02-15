@@ -154,6 +154,12 @@ def get_all_fields(context: TemplateRenderContext) -> Dict[str, Any]:
         id=card.id,
     )
 
+    addInfo["FirstReview"] = ""
+    addInfo["LastReview"] = ""
+    addInfo["TimeAvg"] = ""
+    addInfo["TimeTotal"] = ""
+    addInfo["overdue_fmt"] = ""
+    addInfo["overdue_days"] = ""
     if cnt:
         addInfo["FirstReview"] = time.strftime(
             "%a, %d %b %Y %H:%M:%S", time.localtime(first / 1000)
@@ -173,7 +179,7 @@ def get_all_fields(context: TemplateRenderContext) -> Dict[str, Any]:
             )
             addInfo["overdue_days"] = str(cOverdueIvl)
 
-    addInfo["external_file_link"] = external_file_link(card, context.note_type())
+    # addInfo["external_file_link"] = external_file_link(card, context.note_type())
 
     addInfo["Ord"] = card.ord
     addInfo["Did"] = card.did
@@ -185,8 +191,10 @@ def get_all_fields(context: TemplateRenderContext) -> Dict[str, Any]:
     addInfo["Lapses"] = card.lapses
     addInfo["Type"] = card.type
     addInfo["Nid"] = card.nid
-    addInfo["Mod"] = time.strftime("%Y-%m-%d", time.localtime(card.mod))
-    addInfo["Usn"] = card.usn
+    if hasattr(card, "mod"):
+        addInfo["Mod"] = time.strftime("%Y-%m-%d", time.localtime(card.mod))
+    if hasattr(card, "usn"):
+        addInfo["Usn"] = card.usn
     addInfo["Factor"] = card.factor
     addInfo["Ease"] = int(card.factor / 10)
 
@@ -199,9 +207,11 @@ def get_all_fields(context: TemplateRenderContext) -> Dict[str, Any]:
     addInfo["DayLearning?"] = (
         "Learning" if card.type == 1 and card.queue == 3 else ""
     )
-
     addInfo["Young"] = "Young" if card.type == 2 and card.ivl < 21 else ""
     addInfo["Mature"] = "Mature" if card.type == 2 and card.ivl > 20 else ""
+    addInfo["Date_Created"] = time.strftime(
+        "%Y-%m-%d %H:%M:%S", time.localtime(card.nid / 1000)
+    )
 
     if gc("make_deck_options_available", False):
         addInfo["Options_Group_ID"] = conf["id"]
@@ -230,9 +240,6 @@ def get_all_fields(context: TemplateRenderContext) -> Dict[str, Any]:
         addInfo["lapse_min_ivl"] = conf["lapse"]["minInt"]
         addInfo["lapse_leech_threshold"] = conf["lapse"]["leechFails"]
         addInfo["lapse_leech_action"] = conf["lapse"]["leechAction"]
-        addInfo["Date_Created"] = time.strftime(
-            "%Y-%m-%d %H:%M:%S", time.localtime(card.nid / 1000)
-        )
 
     # add your additional fields here
 
