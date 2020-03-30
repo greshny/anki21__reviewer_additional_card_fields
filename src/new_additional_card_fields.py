@@ -49,6 +49,7 @@ from anki.stats import CardStats
 from anki.template import TemplateRenderContext
 from anki.utils import fmtTimeSpan, isWin, stripHTML
 from aqt import mw
+from aqt.addons import current_point_version
 
 
 def gc(arg, fail=False):
@@ -149,10 +150,15 @@ def get_all_fields(context: TemplateRenderContext) -> Dict[str, Any]:
     else:
         conf = d.decks.confForDid(card.did)
 
-    (first, last, cnt, total) = mw.col.db.first(
-        "select min(id), max(id), count(), sum(time)/1000 from revlog where cid = :id",
-        id=card.id,
-    )
+    if current_point_version < 24:
+        (first, last, cnt, total) = mw.col.db.first(
+            "select min(id), max(id), count(), sum(time)/1000 from revlog where cid = :id",
+            id=card.id,
+        )
+    else:
+        (first, last, cnt, total) = mw.col.db.first(
+            f"select min(id), max(id), count(), sum(time)/1000 from revlog where cid = {card.id}"
+        )
 
     addInfo["FirstReview"] = ""
     addInfo["LastReview"] = ""
