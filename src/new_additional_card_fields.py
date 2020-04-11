@@ -86,6 +86,24 @@ def valueForOverdue(odid, queue, type, due, d):
             return
 
 
+def reviewCardPercentageDueString(odid, odue, queue, type, due, ivl):
+    if odid:
+        due = odue
+    if queue == 1:
+        return "0"
+    elif queue == 0 or type == 0:
+        return "0"
+    elif queue in (2,3) or (type == 2 and queue < 0):
+        try:
+            lastRev = due - ivl
+            elapsed = mw.col.sched.today - lastRev
+            p = elapsed/float(ivl) * 100
+            return "{:.1f}".format(p)
+        except ZeroDivisionError:
+            return "0"
+    return "0"
+
+
 def external_file_link(card, model):
     field_for_filename = ""
     field_for_page = ""
@@ -185,6 +203,8 @@ def get_all_fields(context: TemplateRenderContext) -> Dict[str, Any]:
                 str(cOverdueIvl) + " day" + ("s" if cOverdueIvl > 1 else "")
             )
             addInfo["overdue_days"] = str(cOverdueIvl)
+        addInfo["reviewCardPercentageDue"] = reviewCardPercentageDueString(card.odid, 
+                                        card.odue, card.queue, card.type, card.due, card.ivl)
 
     # addInfo["external_file_link"] = external_file_link(card, context.note_type())
 
