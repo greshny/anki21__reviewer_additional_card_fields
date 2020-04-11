@@ -51,6 +51,7 @@ from anki.utils import fmtTimeSpan, isWin, stripHTML
 from aqt import mw
 from aqt.addons import current_point_version
 
+from .user_files.additional_user_fields import additional_user_fields
 
 def gc(arg, fail=False):
     conf = mw.addonManager.getConfig(__name__)
@@ -247,7 +248,9 @@ def get_all_fields(context: TemplateRenderContext) -> Dict[str, Any]:
         addInfo["lapse_leech_threshold"] = conf["lapse"]["leechFails"]
         addInfo["lapse_leech_action"] = conf["lapse"]["leechAction"]
 
-    # add your additional fields here
+    # add custom fields from user
+    td = additional_user_fields(card, conf)
+    addInfo = {**addInfo, **td}
 
     # for debugging quickly
     tt = " <table>" + "\n"
