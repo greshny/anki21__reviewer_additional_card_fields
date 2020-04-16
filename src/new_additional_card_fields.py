@@ -60,8 +60,9 @@ def gc(arg, fail=False):
     return fail
 
 
-# this is function timefn is from anki from anki/stats.py which is at
-# https://github.com/dae/anki/blob/master/anki/stats.py#L77 and
+# timefn is the same as the function time from anki/stats.py which is at
+# https://github.com/ankitects/anki/blob/c69ccb5015d26823aeed58ffca157e25fe7c0604/pylib/anki/stats.py#L76 and
+# removed on 2020-02-20  https://github.com/ankitects/anki/commit/2fc15d0d3a94a93557431c11a3b63f23de90d78d#diff-f719dba89749c0a4c8651357d9160db4
 def timefn(tm):
     str = ""
     if tm >= 60:
