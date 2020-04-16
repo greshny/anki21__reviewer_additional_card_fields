@@ -47,7 +47,7 @@ from typing import Any, Dict
 from anki import hooks
 from anki.stats import CardStats
 from anki.template import TemplateRenderContext
-from anki.utils import fmtTimeSpan, isWin, stripHTML
+from anki.utils import isWin, stripHTML
 from aqt import mw
 from aqt.addons import current_point_version
 
