@@ -60,18 +60,6 @@ def gc(arg, fail=False):
     return fail
 
 
-# timefn is the same as the function time from anki/stats.py which is at
-# https://github.com/ankitects/anki/blob/c69ccb5015d26823aeed58ffca157e25fe7c0604/pylib/anki/stats.py#L76 and
-# removed on 2020-02-20  https://github.com/ankitects/anki/commit/2fc15d0d3a94a93557431c11a3b63f23de90d78d#diff-f719dba89749c0a4c8651357d9160db4
-def timefn(tm):
-    str = ""
-    if tm >= 60:
-        str = fmtTimeSpan((tm / 60) * 60, short=True, point=-1, unit=1)
-    if tm % 60 != 0 or not str:
-        str += fmtTimeSpan(tm % 60, point=2 if not str else -1, short=True)
-    return str
-
-
 # from Advanced Browser - overdue_days
 # https://github.com/hssm/advanced-browser/blob/master/advancedbrowser/advancedbrowser/custom_fields.py#L225
 def valueForOverdue(odid, queue, type, due, d):
@@ -195,8 +183,8 @@ def get_all_fields(context: TemplateRenderContext) -> Dict[str, Any]:
         )
 
         # https://docs.python.org/2/library/datetime.html  #todo
-        addInfo["TimeAvg"] = timefn(total / float(cnt))
-        addInfo["TimeTotal"] = timefn(total)
+        addInfo["TimeAvg"] = mw.col.backend.format_time_span(total / float(cnt))
+        addInfo["TimeTotal"] = mw.col.backend.format_time_span(total)
 
         cOverdueIvl = valueForOverdue(card.odid, card.queue, card.type, card.due, d)
         if cOverdueIvl:
