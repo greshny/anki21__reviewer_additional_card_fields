@@ -152,7 +152,7 @@ def timespan(t):
     if current_point_version < 28:
         return mw.col.backend.format_time_span(t)
     else:
-        return mw.col.format_timespan()
+        return mw.col.format_timespan(t)
 
 
 def get_all_fields(context: TemplateRenderContext) -> Dict[str, Any]:
