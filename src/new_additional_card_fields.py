@@ -147,6 +147,14 @@ def on_field_filter(
 hooks.field_filter.append(on_field_filter)
 
 
+def timespan(t):
+    """for change from https://github.com/ankitects/anki/commit/89dde3aeb0c1f94b912b3cb2659ec0d4bffb4a1c"""
+    if current_point_version < 28:
+        return mw.col.backend.format_time_span(t)
+    else:
+        return mw.col.format_timespan()
+
+
 def get_all_fields(context: TemplateRenderContext) -> Dict[str, Any]:
     addInfo: Dict[str, Any] = {}
     card = context.card()
@@ -183,8 +191,8 @@ def get_all_fields(context: TemplateRenderContext) -> Dict[str, Any]:
         )
 
         # https://docs.python.org/2/library/datetime.html  #todo
-        addInfo["TimeAvg"] = mw.col.backend.format_time_span(total / float(cnt))
-        addInfo["TimeTotal"] = mw.col.backend.format_time_span(total)
+        addInfo["TimeAvg"] = timespan(total / float(cnt))
+        addInfo["TimeTotal"] = timespan(total)
 
         cOverdueIvl = valueForOverdue(card.odid, card.queue, card.type, card.due, d)
         if cOverdueIvl:
